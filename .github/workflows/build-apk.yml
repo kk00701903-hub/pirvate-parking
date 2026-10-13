@@ -14,17 +14,17 @@ jobs:
       run:
         working-directory: android
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: android-actions/setup-android@v3
-
+      # GitHub 러너에는 Android SDK가 이미 설치되어 있다 (ANDROID_HOME)
       - name: Build debug APK
         run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
