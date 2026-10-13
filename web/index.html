@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>내 차 찾기</title>
+<meta name="description" content="주차 차량 찾기 화면으로 바로 이동하는 바로가기 앱">
+<meta name="theme-color" content="#0f2a44">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="내 차 찾기">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
+<style>
+  /* 레이아웃: 주차장 표지판처럼 가운데 큰 P 표지 + 큰 버튼 하나 */
+  :root {
+    --bg: #eef2f6;
+    --panel: #ffffff;
+    --fg: #14202c;
+    --muted: #5b6b7b;
+    --navy: #0f2a44;     /* 주차장 표지판 남색 */
+    --sign: #f5c400;     /* 주차 표지 노랑 */
+    --line: #d5dde6;
+    --font: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b141c; --panel: #13202c; --fg: #e6edf3; --muted: #9aabbb;
+      --navy: #1d4a74; --line: #24364a; color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 16px;
+    padding-block: calc(env(safe-area-inset-top, 0px) + 24px) calc(env(safe-area-inset-bottom, 0px) + 24px);
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+  .sign {
+    width: 96px; height: 96px;
+    border-radius: 16px;
+    background: var(--navy);
+    color: var(--sign);
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    display: grid; place-items: center;
+    border: 4px solid var(--sign);
+  }
+  h1 { margin: 0; font-size: 26px; text-wrap: balance; }
+  .lead { margin: 0; color: var(--muted); line-height: 1.6; font-size: 15px; }
+  .go {
+    width: 100%;
+    display: block;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: var(--sign);
+    color: #0f2a44;
+    font: 700 19px var(--font);
+    text-decoration: none;
+  }
+  .go:active { filter: brightness(.94); }
+  .go:focus-visible, .copy:focus-visible, .install:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+  .install {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--fg);
+    font: 600 15px var(--font);
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .hint { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .url {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .url code {
+    flex: 1; min-width: 0;
+    font-size: 12px;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+    text-align: left;
+    user-select: all;
+  }
+  .copy {
+    flex: none;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--fg);
+    font: 600 13px var(--font);
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="sign" aria-hidden="true">P</div>
+  <h1>내 차 찾기</h1>
+  <p class="lead">버튼을 누르면 주차 차량 찾기 화면으로 이동합니다.</p>
+  <a class="go" id="go" href="https://mobile-find-my-car.vercel.app/find">내 차 찾으러 가기</a>
+
+  <!-- 설치 안내: 이미 앱으로 실행 중이면 숨김 -->
+  <button class="install" id="install" type="button" hidden>홈 화면에 앱 설치</button>
+  <p class="hint" id="ios-hint" hidden>아이폰: Safari 아래 공유 버튼 → 「홈 화면에 추가」를 누르면 앱처럼 설치됩니다.</p>
+
+  <div class="url">
+    <code id="addr">https://mobile-find-my-car.vercel.app/find</code>
+    <button class="copy" id="copy" type="button">주소 복사</button>
+  </div>
+</main>
+
+<script>
+  // 서비스 워커 등록 (HTTPS 또는 localhost에서만 동작)
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
+
+  // 설치 버튼
+  const isStandalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const installBtn = document.getElementById("install");
+  const iosHint = document.getElementById("ios-hint");
+  let deferred = null;
+
+  if (!isStandalone) {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferred = e;
+      installBtn.hidden = false;
+    });
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isIOS) iosHint.hidden = false;
+  }
+  installBtn.addEventListener("click", async () => {
+    if (!deferred) return;
+    deferred.prompt();
+    await deferred.userChoice;
+    deferred = null;
+    installBtn.hidden = true;
+  });
+  window.addEventListener("appinstalled", () => { installBtn.hidden = true; });
+
+  // 주소 복사
+  const btn = document.getElementById("copy");
+  const addr = document.getElementById("addr");
+  btn.addEventListener("click", () => {
+    const done = () => { btn.textContent = "복사됨"; setTimeout(() => btn.textContent = "주소 복사", 1500); };
+    const fallback = () => {
+      const r = document.createRange(); r.selectNodeContents(addr);
+      const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = "길게 눌러 복사";
+    };
+    try { navigator.clipboard.writeText(addr.textContent).then(done, fallback); }
+    catch (e) { fallback(); }
+  });
+</script>
+</body>
+</html>

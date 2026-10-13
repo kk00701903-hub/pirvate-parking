@@ -1,0 +1,37 @@
+# GitHub에 올리면 자동으로 APK를 만든다.
+# 결과: 저장소 > Actions > 해당 실행 > Artifacts 의 「find-my-car-apk」
+name: Build APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk find-my-car.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: find-my-car-apk
+          path: android/find-my-car.apk

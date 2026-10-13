@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2a44">
+<title>내 차 찾기</title>
+<style>
+  :root { --bg:#eef2f6; --fg:#14202c; --muted:#5b6b7b; --navy:#0f2a44; --sign:#f5c400; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0b141c; --fg:#e6edf3; --muted:#9aabbb; color-scheme: dark; } }
+  html, body { height: 100%; margin: 0; }
+  body { font-family: "Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; background: var(--bg); color: var(--fg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding-inline: 24px; text-align: center; }
+  .sign { width: 72px; height: 72px; border-radius: 14px; background: var(--navy); color: var(--sign); border: 3px solid var(--sign);
+    font-size: 46px; font-weight: 700; display: grid; place-items: center; }
+  h1 { margin: 0; font-size: 20px; }
+  p { margin: 0; color: var(--muted); line-height: 1.6; }
+  button { margin-top: 6px; border: 0; border-radius: 10px; background: var(--sign); color: #0f2a44; font: 700 16px inherit; padding: 14px 22px; cursor: pointer; }
+</style>
+</head>
+<body>
+  <div class="sign" aria-hidden="true">P</div>
+  <h1>인터넷에 연결되어 있지 않습니다</h1>
+  <p>Wi-Fi나 모바일 데이터를 켠 뒤 다시 시도해 주세요.</p>
+  <button type="button" onclick="location.reload()">다시 시도</button>
+</body>
+</html>
