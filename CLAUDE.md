@@ -3,6 +3,8 @@
 주차 차량 찾기 웹(<https://mobile-find-my-car.vercel.app/find>)으로 들어가는 바로가기 앱. 같은 소스로 PWA와 Android APK를 만든다.
 원본 주차장 웹은 우리가 관리하지 않는다 (수정 불가, iframe 허용 여부도 모름).
 
+새 세션은 `docs/HANDOFF.md`(현재 상태·다음 할 일)부터 읽는다.
+
 ## 작업 규칙
 
 - 답변과 문서는 한국어로 쓴다.

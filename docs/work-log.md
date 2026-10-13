@@ -36,3 +36,4 @@
 - GitHub Actions 첫 빌드 실패 → 원인: `android-actions/setup-android@v3` 단계 실패. GitHub 러너에 Android SDK가 이미 있어 그 단계를 빼고 checkout·setup-java를 v5로 올림
 - 두 번째 빌드 성공 (46초). Artifacts `find-my-car-apk`로 APK 생성 확인 — 처음으로 빌드 검증 완료
   - 클라우드 작업 환경에서는 Artifacts 내려받기가 막혀 있어 APK 내용은 직접 열어 보지 못함. 사용자가 Actions 화면에서 내려받아 설치 확인 필요
+- 이전 대화 삭제에 대비해 인수인계 문서 `docs/HANDOFF.md` 작성, `CLAUDE.md`에서 연결
