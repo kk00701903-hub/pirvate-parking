@@ -33,3 +33,6 @@
 - GitHub 저장소 `kk00701903-hub/pirvate-parking`(빈 저장소)에 전체 소스 첫 푸시 (사용자 요청)
 - 클라우드 작업 준비: `CLAUDE.md` 추가 (구조, 작업 규칙, 빌드 방법). 이후 APK 빌드·검증은 GitHub Actions `Build APK` 워크플로로 진행
 - 특이사항: 로컬 PC(jpd013843) 폴더 연결 해제는 Claude가 할 수 없어 사용자가 데스크톱 앱에서 직접 해야 함
+- GitHub Actions 첫 빌드 실패 → 원인: `android-actions/setup-android@v3` 단계 실패. GitHub 러너에 Android SDK가 이미 있어 그 단계를 빼고 checkout·setup-java를 v5로 올림
+- 두 번째 빌드 성공 (46초). Artifacts `find-my-car-apk`로 APK 생성 확인 — 처음으로 빌드 검증 완료
+  - 클라우드 작업 환경에서는 Artifacts 내려받기가 막혀 있어 APK 내용은 직접 열어 보지 못함. 사용자가 Actions 화면에서 내려받아 설치 확인 필요
